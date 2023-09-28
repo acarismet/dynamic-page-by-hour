@@ -1,63 +1,64 @@
-// Get a reference to the container element
 const container = document.getElementById('container');
-container.classList.add('position-relative', 'border', 'border-1', 'border-primary');
+container.classList.add('position-relative', 'border', 'border-1', 'border-primary', 'm-16');
 
-// Set the maximum width and height for the container
-container.style.width = '60rem';
-container.style.height = '30rem';
 
-// Create the sun image element
+container.style.maxWidth = '50%';
+container.style.height = '25rem';
+
+
 const sun = document.createElement('img');
 sun.src = "./assets/sun.png";
 sun.alt = "A beautiful image";
-sun.width = 75; // Set the image width
-sun.height = 75; // Set the image height
+sun.width = 75; 
+sun.height = 75; 
+sun.classList.add('border', 'border-1', 'border-secondary');
 
-// Add the sun image to the container
+
+function addResponsiveClasses() {
+    if (window.innerWidth >= 1200) {
+
+        container.classList.add('d-lg-block');
+    } else if (window.innerWidth >= 992) {
+    
+        container.classList.add('d-md-block');
+    } else {
+ 
+        container.classList.add('d-sm-block');
+    }
+}
+
 container.appendChild(sun);
 
-// Function to move the sun along a half-circle path
+
 function moveSun() {
-    const radius = container.clientWidth / 2; // Half of the container width
+    const radius = container.clientWidth / 2; 
     let angle = 0;
     const centerX = container.clientWidth / 2;
     const centerY = container.clientHeight;
-    let isInsideContainer = true; // Track whether the sun is inside the container
 
-    // Use requestAnimationFrame for smoother animation
+    container.appendChild(sun);
+
+    addResponsiveClasses();
+
     function animate() {
-        // Calculate the new position
         const x = centerX + radius * Math.cos(angle);
         const y = centerY - radius * Math.sin(angle);
-
-        // Set the sun's position
-        sun.style.transform = `translate(${x}px, ${y}px)`;
-
-        angle += 0.005; // Adjust this value to control the speed of movement (smaller values make it slower)
-
-        // Check if the sun goes out of the container
-        if (x <= 0) {
-            if (isInsideContainer) {
-                isInsideContainer = false;
-                sun.style.visibility = 'hidden'; // Hide the sun
-            }
+    
+        sun.style.transform = `translate(${x}px, ${y}px`;
+    
+        angle += 0.005; 
+    
+        
+        if (angle <= Math.PI) { 
+            requestAnimationFrame(animate);
         } else {
-            if (!isInsideContainer) {
-                isInsideContainer = true;
-                sun.style.visibility = 'visible'; // Show the sun
-            }
+            sun.style.display= 'none'
         }
-
-        // Stop the animation when the sun reaches the left-bottom corner
-        if (x <= 0) {
-            return;
-        }
-
-        requestAnimationFrame(animate);
     }
 
     animate();
 }
 
-// Call the moveSun function to start the animation
 moveSun();
+
+window.addEventListener('resize', addResponsiveClasses);

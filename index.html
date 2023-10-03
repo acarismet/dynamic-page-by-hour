@@ -28,13 +28,13 @@
       </button>
 
       <div id="container" class="container-lg">
-        <!---->
+        <!--This row and col holds sun-->
         <div class="row">
           <div class="col-12 text-center">
             <svg
-              id="firstSunObject"
-              width="198"
-              height="198"
+              id="sunSVG"
+              width="75"
+              height="75"
               viewBox="0 0 198 198"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -126,8 +126,90 @@
           </div>
         </div>
         <!---->
-
-        <div id="moonbox" class="position-absolute"></div>
+        <div id="moonbox" class="position-absolute">
+          <svg
+            id="moonSVG"
+            width="75"
+            height="75"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle id="moonbodyCircle" cx="50" cy="50" r="50" fill="#F5C71A" />
+            <path
+              id="crescentOpa"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M38.1707 86.8749C65.7849 86.8749 88.1707 64.4891 88.1707 36.8749C88.1707 27.1926 85.4186 18.1532 80.654 10.496C92.4258 19.6438 100 33.9374 100 50C100 77.6142 77.6142 100 50 100C32.068 100 16.3408 90.5602 7.51663 76.3789C15.9824 82.9576 26.6191 86.8749 38.1707 86.8749Z"
+              fill="black"
+              fill-opacity="0.25"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="35.5"
+              cy="20.5"
+              r="10.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="77.5"
+              cy="27.5"
+              r="6.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="49.5"
+              cy="47.5"
+              r="5.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="82.5"
+              cy="68.5"
+              r="4.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="31"
+              cy="64"
+              r="4"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="47"
+              cy="92"
+              r="3"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="22.5"
+              cy="46.5"
+              r="1.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="56.5"
+              cy="65.5"
+              r="1.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+          </svg>
+        </div>
       </div>
     </main>
     <script

@@ -1,20 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="sun.css" />
     <title>Real-Time Sun and Luna Movement</title>
-</head>
+  </head>
 
-<body>
-    <main class="vw-100, vh-100 border border-1 border-danger d-flex justify-content-center align-items-center">
-        <button id="runMoonButton" class="btn btn-primary position-absolute top-0">Run Moon</button>
-        <div id="container" class="container-lg">
-            <div id="moonbox" class="position-absolute"></div>
+  <body>
+    <main
+      class="vw-100, vh-100 border border-1 border-danger d-flex justify-content-center align-items-center"
+    >
+      <button
+        id="runMoonButton"
+        class="btn btn-primary position-absolute top-0"
+      >
+        Run Moon
+      </button>
+      <button id="sunButton" class="btn btn-primary position-absolute bottom-0">
+        Change Sun
+      </button>
+
+      <div id="container" class="container-lg">
+        <!--This row and col holds sun-->
+        <div class="row">
+          <div class="col-12 text-center">
+            <svg
+              id="sunSVG"
+              width="75"
+              height="75"
+              viewBox="0 0 198 198"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                id="sunRect1"
+                x="146"
+                y="148.95"
+                width="7"
+                height="29"
+                rx="3.5"
+                transform="rotate(-45 146 148.95)"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect2"
+                x="166.506"
+                y="26"
+                width="7"
+                height="29"
+                rx="3.5"
+                transform="rotate(45 166.506 26)"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect3"
+                x="44.5061"
+                y="144"
+                width="7"
+                height="29"
+                rx="3.5"
+                transform="rotate(45 44.5061 144)"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect4"
+                x="32"
+                y="30.9498"
+                width="7"
+                height="29"
+                rx="3.5"
+                transform="rotate(-45 32 30.9498)"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect5"
+                x="95"
+                y="169"
+                width="7"
+                height="29"
+                rx="3.5"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect6"
+                y="102"
+                width="7"
+                height="29"
+                rx="3.5"
+                transform="rotate(-90 0 102)"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect7"
+                x="169"
+                y="102"
+                width="7"
+                height="29"
+                rx="3.5"
+                transform="rotate(-90 169 102)"
+                fill="#FFA700"
+              />
+              <rect
+                id="sunRect8"
+                x="95"
+                width="7"
+                height="29"
+                rx="3.5"
+                fill="#FFA700"
+              />
+              <circle id="sunCircle" cx="99" cy="99" r="50" fill="#FFA700" />
+              <path
+                id="sunOpa"
+                opacity="0.1"
+                d="M99 49C105.566 49 112.068 50.2933 118.134 52.806C124.2 55.3188 129.712 59.0017 134.355 63.6447C138.998 68.2876 142.681 73.7996 145.194 79.8658C147.707 85.9321 149 92.4339 149 99C149 105.566 147.707 112.068 145.194 118.134C142.681 124.2 138.998 129.712 134.355 134.355C129.712 138.998 124.2 142.681 118.134 145.194C112.068 147.707 105.566 149 99 149L99 99V49Z"
+                fill="black"
+              />
+            </svg>
+          </div>
         </div>
+        <!---->
+        <div id="moonbox" class="position-absolute">
+          <svg
+            id="moonSVG"
+            width="75"
+            height="75"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle id="moonbodyCircle" cx="50" cy="50" r="50" fill="#F5C71A" />
+            <path
+              id="crescentOpa"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M38.1707 86.8749C65.7849 86.8749 88.1707 64.4891 88.1707 36.8749C88.1707 27.1926 85.4186 18.1532 80.654 10.496C92.4258 19.6438 100 33.9374 100 50C100 77.6142 77.6142 100 50 100C32.068 100 16.3408 90.5602 7.51663 76.3789C15.9824 82.9576 26.6191 86.8749 38.1707 86.8749Z"
+              fill="black"
+              fill-opacity="0.25"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="35.5"
+              cy="20.5"
+              r="10.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="77.5"
+              cy="27.5"
+              r="6.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="49.5"
+              cy="47.5"
+              r="5.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="82.5"
+              cy="68.5"
+              r="4.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="31"
+              cy="64"
+              r="4"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="47"
+              cy="92"
+              r="3"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="22.5"
+              cy="46.5"
+              r="1.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+            <circle
+              class="moonOpaCirc"
+              cx="56.5"
+              cy="65.5"
+              r="1.5"
+              fill="black"
+              fill-opacity="0.1"
+            />
+          </svg>
+        </div>
+      </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
     <script src="./index.js"></script>
-</body>
+  </body>
 </html>

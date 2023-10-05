@@ -1,6 +1,5 @@
 const container = document.getElementById("container");
 const moonbox = document.getElementById("moonbox");
-const moonButton = document.getElementById("runMoonButton");
 const sunButton = document.getElementById("sunButton");
 
 const sunShape = document.getElementById("sunSVG");
@@ -17,7 +16,7 @@ const sunRect8 = document.getElementById("sunRect8");
 const sunOpa = document.getElementById("sunOpa");
 
 const moonShape = document.getElementById("moonSVG");
-const moonBody = document.getElementById("moonbodyCirle");
+const moonBody = document.getElementById("moonCircle");
 const moonTopOpa = document.getElementById("crescentOpa");
 const moonSmallCircles = document.getElementsByClassName("moonOpaCirc");
 
@@ -32,8 +31,80 @@ container.style.maxWidth = "50%";
 container.style.height = "25rem";
 
 container.appendChild(sunShape);
+///
 
-moonbox.classList.add("bg-dark", "d-flex", "justify-content-center");
+const cityName = "ANKARA";
+const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
+
+function moveSun(sunriseTimestamp, sunsetTimestamp, currentLocalTime) {
+  console.log(sunriseTimestamp);
+  console.log(sunsetTimestamp);
+  console.log(currentLocalTime);
+
+  const radius = container.clientWidth / 2;
+  let angle = 0;
+  const centerX = container.clientWidth / 2;
+  const centerY = container.clientHeight;
+
+  addResponsiveClasses();
+
+  function animate() {
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY - radius * Math.sin(angle);
+
+    sunShape.style.transform = `translate(${x}px, ${y}px`;
+
+    for (let i = sunriseTimestamp; i <= sunsetTimestamp; i++) {
+      angle = i;
+    }
+
+    if (angle <= Math.PI) {
+      requestAnimationFrame(animate);
+    } else {
+      sunShape.style.display = "none";
+    }
+  }
+
+  animate();
+}
+moveSun();
+let sunriseTime;
+let sunsetTime;
+let currentLocalTime;
+
+fetch(apiUrl)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    console.log(data);
+    const sunriseTimestamp = data.sys.sunrise;
+    const sunsetTimestamp = data.sys.sunset;
+    sunriseTime = new Date(sunriseTimestamp * 1000);
+    sunsetTime = new Date(sunsetTimestamp * 1000);
+
+    const currentTimestamp = data.dt;
+    currentLocalTime = new Date(currentTimestamp * 1000);
+
+    const options = { hour: "numeric", minute: "numeric", second: "numeric" };
+    const userLocale = navigator.language || "en-US";
+
+    sunriseTime = sunriseTime.toLocaleTimeString(userLocale, options);
+    sunsetTime = sunsetTime.toLocaleTimeString(userLocale, options);
+    currentLocalTime = currentLocalTime.toLocaleTimeString(userLocale, options);
+
+    moveSun(sunriseTimestamp, sunsetTimestamp, currentLocalTime);
+  })
+  .catch((error) => {
+    console.error("Fetch error:", error);
+  });
+
+//
+
+moonbox.classList.add("bg-primary", "d-flex", "justify-content-center");
 moonbox.style.width = "15%";
 moonbox.style.height = "80%";
 moonbox.style.right = "150px";
@@ -122,53 +193,37 @@ function sunStep4() {
   sunOpa.setAttribute("opacity", "0.7");
 }
 
-function moveSun() {
-  const radius = container.clientWidth / 2;
-  let angle = 0;
-  const centerX = container.clientWidth / 2;
-  const centerY = container.clientHeight;
+function animateMoon() {
+  const totalDistance = 244;
+  let currentPosition = 0;
+  let colorChanged = false;
+  const initialColor = "rgb(245, 199, 26)"; // Initial color
+  const targetColor = "rgb(240, 240, 240)"; // Target color
+  const colorRangeStart = 75;
+  const colorRangeEnd = 85;
 
-  addResponsiveClasses();
+  function updateMoonPosition() {
+    if (currentPosition <= totalDistance) {
+      currentPosition++;
+      moonShape.style.transform = `translate(0px, -${currentPosition}px)`;
+      requestAnimationFrame(updateMoonPosition);
 
-  function animate() {
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY - radius * Math.sin(angle);
-
-    sunShape.style.transform = `translate(${x}px, ${y}px`;
-
-    angle += 0.005;
-
-    if (angle <= Math.PI) {
-      requestAnimationFrame(animate);
-    } else {
-      sunShape.style.display = "none";
+      // Check if currentPosition is within the desired range
+      if (
+        currentPosition >= colorRangeStart &&
+        currentPosition <= colorRangeEnd &&
+        !colorChanged
+      ) {
+        moonBody.setAttribute("fill", targetColor); // Set to the target color directly
+        colorChanged = true;
+      }
     }
   }
 
-  animate();
+  updateMoonPosition();
 }
 
-moveSun();
-
-function moveMoon() {
-  let position = moonbox.clientHeight;
-  const endPosition = 0;
-  const speed = 1;
-
-  function animateMoon() {
-    moonShape.style.bottom = position + "px";
-    position -= speed;
-
-    if (position >= endPosition) {
-      requestAnimationFrame(animateMoon);
-    }
-  }
-
-  animateMoon();
-}
-
-moonButton.addEventListener("click", moveMoon);
-
-sunButton.addEventListener("click", sunStep1);
+animateMoon();
+sunButton.addEventListener("click", sunStep4);
 
 window.addEventListener("resize", addResponsiveClasses);

@@ -30,41 +30,78 @@ container.classList.add(
 container.style.maxWidth = "50%";
 container.style.height = "25rem";
 container.appendChild(sunShape);
-//
-//
-// Current Information From Local Independent from API - Start
+
+//***** Current Information From Local Independent from API - Start
 const currentDate = new Date();
-const currentYear = currentDate.getFullYear();
-const currentMonth = currentDate.getMonth() + 1;
-const currentDay = currentDate.getDate();
+// const currentYear = currentDate.getFullYear();
+// const currentMonth = currentDate.getMonth() + 1;
+// const currentDay = currentDate.getDate();
 const currentHour = currentDate.getHours();
 const currentMinute = currentDate.getMinutes();
 const currentSecond = currentDate.getSeconds();
-const currentTimeMillis = currentDate.getTime();
+// const currentTimeMillis = currentDate.getTime();
 
-// Current Information From Local Independent from API - End
-//
-//
-function moveSun(sunsetTime, sunriseTime) {
-  let sunriseHour = sunriseTime.getHours();
-  let sunriseMinutes = sunriseTime.getMinutes();
-  let sunriseSecond = sunriseTime.getSeconds();
+//***** Current Information From Local Independent from API - End
 
-  let sunsetHour = sunsetTime.getHours();
-  let sunsetMinutes = sunsetTime.getMinutes();
-  let sunsetSecond = sunsetTime.getSeconds();
-  console.log("sunriseTime: " + sunriseTime);
-  console.log("sunsetTime: " + sunsetTime + "\n --- \n");
-  console.log(
-    "sunrise: " + sunriseHour + " " + sunriseMinutes + " " + sunriseSecond
-  );
-  console.log(
-    "sunset: " + sunsetHour + " " + sunsetMinutes + " " + sunsetSecond
-  );
-  console.log(currentHour, currentMinute, currentSecond);
+let currentTimeArray = [currentHour, currentMinute, currentSecond];
+
+//**** Global Hour Checking */
+let isSunrise = false;
+let isSunSet = false;
+// Specific Hours will be decleared here ...
+
+function checkSun(
+  sunriseHour,
+  sunriseMinutes,
+  sunriseSecond,
+  sunsetHour,
+  sunsetMinutes,
+  sunsetSecond,
+  dayLengthMillis
+) {
+  let sunriseArray = [sunriseHour, sunriseMinutes, sunriseSecond];
+  let sunsetArray = [sunsetHour, sunsetMinutes, sunsetSecond];
+  const dayLengthHours = dayLengthMillis / (1000 * 60 * 60);
+  console.log(dayLengthHours);
+  const dayLengthMinutes = Math.floor(dayLengthMillis / (1000 * 60));
+  console.log(dayLengthMinutes);
+  if (
+    currentTimeArray[0] == sunriseArray[0] &&
+    currentTimeArray[1] == sunriseArray[1] &&
+    currentTimeArray[2] == sunriseArray[2]
+  ) {
+    isSunrise = true;
+  }
 }
 //
 //
+function moveSun() {
+  const radius = container.clientWidth / 2;
+  let angle = 0;
+  const centerX = container.clientWidth / 2;
+  const centerY = container.clientHeight;
+
+  addResponsiveClasses();
+
+  function animate() {
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY - radius * Math.sin(angle);
+
+    sunShape.style.transform = `translate(${x}px, ${y}px`;
+
+    angle += 0.005;
+
+    if (angle <= Math.PI) {
+      setTimeout(function () {
+        requestAnimationFrame(animate);
+      }, 500);
+    } else {
+      sunShape.style.display = "none";
+    }
+  }
+
+  animate();
+}
 
 const cityName = "ANKARA";
 const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
@@ -91,8 +128,24 @@ fetch(apiUrl)
     let upSunriseTime = sunriseTime.toLocaleTimeString(userLocale, options);
     let upSunsetTime = sunsetTime.toLocaleTimeString(userLocale, options);
     currentLocalTime = currentLocalTime.toLocaleTimeString(userLocale, options); */
+    const dayLengthMillis = sunsetTime - sunriseTime;
+    let sunriseHour = sunriseTime.getHours();
+    let sunriseMinutes = sunriseTime.getMinutes();
+    let sunriseSecond = sunriseTime.getSeconds();
 
-    moveSun(sunsetTime, sunriseTime);
+    let sunsetHour = sunsetTime.getHours();
+    let sunsetMinutes = sunsetTime.getMinutes();
+    let sunsetSecond = sunsetTime.getSeconds();
+
+    checkSun(
+      sunriseHour,
+      sunriseMinutes,
+      sunriseSecond,
+      sunsetHour,
+      sunsetMinutes,
+      sunsetSecond,
+      dayLengthMillis
+    );
   })
   .catch((error) => {
     console.error("Fetch error:", error);
@@ -219,7 +272,7 @@ function animateMoon() {
 
   updateMoonPosition();
 }
-
+moveSun();
 //animateMoon();
 sunButton.addEventListener("click", sunStep4);
 

@@ -29,48 +29,45 @@ container.classList.add(
 );
 container.style.maxWidth = "50%";
 container.style.height = "25rem";
-
 container.appendChild(sunShape);
-///
+//
+//
+// Current Information From Local Independent from API - Start
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+const currentMonth = currentDate.getMonth() + 1;
+const currentDay = currentDate.getDate();
+const currentHour = currentDate.getHours();
+const currentMinute = currentDate.getMinutes();
+const currentSecond = currentDate.getSeconds();
+const currentTimeMillis = currentDate.getTime();
+
+// Current Information From Local Independent from API - End
+//
+//
+function moveSun(sunsetTime, sunriseTime) {
+  let sunriseHour = sunriseTime.getHours();
+  let sunriseMinutes = sunriseTime.getMinutes();
+  let sunriseSecond = sunriseTime.getSeconds();
+
+  let sunsetHour = sunsetTime.getHours();
+  let sunsetMinutes = sunsetTime.getMinutes();
+  let sunsetSecond = sunsetTime.getSeconds();
+  console.log("sunriseTime: " + sunriseTime);
+  console.log("sunsetTime: " + sunsetTime + "\n --- \n");
+  console.log(
+    "sunrise: " + sunriseHour + " " + sunriseMinutes + " " + sunriseSecond
+  );
+  console.log(
+    "sunset: " + sunsetHour + " " + sunsetMinutes + " " + sunsetSecond
+  );
+  console.log(currentHour, currentMinute, currentSecond);
+}
+//
+//
 
 const cityName = "ANKARA";
 const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
-
-function moveSun(sunriseTimestamp, sunsetTimestamp, currentLocalTime) {
-  console.log(sunriseTimestamp);
-  console.log(sunsetTimestamp);
-  console.log(currentLocalTime);
-
-  const radius = container.clientWidth / 2;
-  let angle = 0;
-  const centerX = container.clientWidth / 2;
-  const centerY = container.clientHeight;
-
-  addResponsiveClasses();
-
-  function animate() {
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY - radius * Math.sin(angle);
-
-    sunShape.style.transform = `translate(${x}px, ${y}px`;
-
-    for (let i = sunriseTimestamp; i <= sunsetTimestamp; i++) {
-      angle = i;
-    }
-
-    if (angle <= Math.PI) {
-      requestAnimationFrame(animate);
-    } else {
-      sunShape.style.display = "none";
-    }
-  }
-
-  animate();
-}
-moveSun();
-let sunriseTime;
-let sunsetTime;
-let currentLocalTime;
 
 fetch(apiUrl)
   .then((response) => {
@@ -81,27 +78,27 @@ fetch(apiUrl)
   })
   .then((data) => {
     console.log(data);
-    const sunriseTimestamp = data.sys.sunrise;
-    const sunsetTimestamp = data.sys.sunset;
-    sunriseTime = new Date(sunriseTimestamp * 1000);
-    sunsetTime = new Date(sunsetTimestamp * 1000);
-
-    const currentTimestamp = data.dt;
-    currentLocalTime = new Date(currentTimestamp * 1000);
+    let sunriseTimestamp = data.sys.sunrise;
+    let sunsetTimestamp = data.sys.sunset;
+    let sunriseTime = new Date(sunriseTimestamp * 1000);
+    let sunsetTime = new Date(sunsetTimestamp * 1000);
+    /* let currentTimestamp = data.dt;
+    let currentLocalTime = new Date(currentTimestamp * 1000);
 
     const options = { hour: "numeric", minute: "numeric", second: "numeric" };
     const userLocale = navigator.language || "en-US";
 
-    sunriseTime = sunriseTime.toLocaleTimeString(userLocale, options);
-    sunsetTime = sunsetTime.toLocaleTimeString(userLocale, options);
-    currentLocalTime = currentLocalTime.toLocaleTimeString(userLocale, options);
+    let upSunriseTime = sunriseTime.toLocaleTimeString(userLocale, options);
+    let upSunsetTime = sunsetTime.toLocaleTimeString(userLocale, options);
+    currentLocalTime = currentLocalTime.toLocaleTimeString(userLocale, options); */
 
-    moveSun(sunriseTimestamp, sunsetTimestamp, currentLocalTime);
+    moveSun(sunsetTime, sunriseTime);
   })
   .catch((error) => {
     console.error("Fetch error:", error);
   });
 
+//
 //
 
 moonbox.classList.add("bg-primary", "d-flex", "justify-content-center");
@@ -223,7 +220,7 @@ function animateMoon() {
   updateMoonPosition();
 }
 
-animateMoon();
+//animateMoon();
 sunButton.addEventListener("click", sunStep4);
 
 window.addEventListener("resize", addResponsiveClasses);

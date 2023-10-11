@@ -47,7 +47,7 @@ let currentTimeArray = [currentHour, currentMinute, currentSecond];
 
 //**** Global Hour Checking */
 let isSunrise = false;
-let isSunSet = false;
+let isSunset = false;
 // Specific Hours will be decleared here ...
 
 function checkSun(
@@ -71,6 +71,12 @@ function checkSun(
     currentTimeArray[2] == sunriseArray[2]
   ) {
     isSunrise = true;
+  } else if (
+    currentTimeArray[0] == sunsetArray[0] &&
+    currentTimeArray[1] == sunsetArray[1] &&
+    currentTimeArray[2] == sunsetArray[2]
+  ) {
+    isSunset = true;
   }
 }
 //

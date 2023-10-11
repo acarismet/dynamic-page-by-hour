@@ -89,7 +89,7 @@ function moveSun() {
 
     sunShape.style.transform = `translate(${x}px, ${y}px`;
 
-    angle += 0.005;
+    angle += 0.0174533;
 
     if (angle <= Math.PI) {
       setTimeout(function () {
